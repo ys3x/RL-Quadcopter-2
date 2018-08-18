@@ -1,7 +1,7 @@
 import numpy as np
 from physics_sim import PhysicsSim
 
-class HoverTask():
+class TakeOffTask():
     """Task (environment) that defines the goal and provides feedback to the agent."""
     def __init__(self, init_pose=None, init_velocities=None, 
         init_angle_velocities=None, runtime=5., target_pos=None):
@@ -26,9 +26,6 @@ class HoverTask():
         distance = (self.sim.pose[:3] - self.target_pos) * [0.3, 0.3, 1]  # emphasizes the z-distance
         distance = 1 / (np.linalg.norm(distance) + 1)
 
-        #velocity_z = np.tanh(self.sim.v[2]) * 2 # -0.5 ~ 0.5
-        #reward = 0.8 * distance + 0.2 * velocity_z
-
         reward = 2 * distance - 1
         return reward / self.action_repeat, -1, 1
 
@@ -45,19 +42,6 @@ class HoverTask():
         # sum
         reward = 0.8 * distance + 0.2 + v_z
 
-        return reward / self.action_repeat
-
-
-    def get_reward_x1(self):
-        """Uses current pose of sim to return reward."""
-        # reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
-
-        distance = (self.sim.pose[:3] - self.target_pos) * [0.2, 0.2, 1]  # emphasizes the z-distance
-        distance = 1 / (np.linalg.norm(distance) + 1)
-        reward = 2 * distance - 1.0
-
-        reward += np.tanh(self.sim.v[2])
-        reward = np.clip(reward, -1, 1)
         return reward / self.action_repeat
 
     def step(self, rotor_speeds):
