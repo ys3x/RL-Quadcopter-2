@@ -27,7 +27,7 @@ class TakeOffTask():
         distance = 1 / (np.linalg.norm(distance) + 1)
 
         reward = 2 * distance - 1
-        return reward / self.action_repeat, -1, 1
+        return reward / self.action_repeat
 
     # distance + z_velocity
     def get_reward_distance_vz(self):
